@@ -1,1 +1,342 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+<title>Leorix MC Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<script src="https://checkout.tebex.io/api/checkout.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg-dark:rgba(0,0,0,0.75);
+  --text:white;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  color:var(--text);
+  text-align:center;
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('background.png');
+  background-size:cover;
+}
+
+.logo{width:220px;margin-top:10px;}
+
+.skin-left, .skin-right{
+  position:fixed;
+  top:120px;
+  width:140px;
+  animation:float 3s ease-in-out infinite;
+  z-index:10;
+}
+.skin-left{left:20px;}
+.skin-right{right:20px;animation-delay:1.5s;}
+
+.skin-left img, .skin-right img{
+  width:100%;
+  image-rendering:pixelated;
+  filter:drop-shadow(0 0 10px #00ffcc);
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-20px)}
+}
+
+#profile{
+  position:absolute;
+  top:20px;
+  right:20px;
+  padding:10px 15px;
+  border-radius:20px;
+  background:var(--bg-dark);
+  cursor:pointer;
+}
+
+.section{display:none;}
+.section.active{display:block;}
+
+.card{
+  margin:20px auto;
+  padding:30px;
+  width:300px;
+  background:var(--bg-dark);
+  border-radius:15px;
+  cursor:pointer;
+}
+
+.ranks-container,.coin-container{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:25px;
+}
+
+.rank-box,.coin{
+  width:300px;
+  padding:20px;
+  border-radius:15px;
+  background:rgba(0,0,0,0.8);
+  transition:0.3s;
+}
+
+@keyframes glow{
+  0%{box-shadow:0 0 5px}
+  50%{box-shadow:0 0 25px}
+  100%{box-shadow:0 0 5px}
+}
+
+.prime{border:2px solid cyan;animation:glow 2s infinite;}
+.leorix{border:2px solid gold;animation:glow 1.5s infinite;box-shadow:0 0 20px gold, 0 0 40px #00ffcc;}
+.mythic{border:2px solid violet;animation:glow 2s infinite;}
+
+.coin:nth-child(2){transform:scale(1.15);border:2px solid gold;}
+
+.rank-img{width:100%;height:100px;object-fit:contain;}
+.kit-img{width:100%;margin-top:10px;border-radius:10px;}
+.coin img{width:120px;}
+
+.perks{text-align:left;margin-top:10px;font-size:14px}
+
+button{
+  padding:10px 15px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  background:#00ffcc;
+  cursor:pointer;
+}
+
+#cartBox{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:260px;
+  padding:15px;
+  background:var(--bg-dark);
+  border-radius:15px;
+  display:none;
+  text-align:left;
+}
+</style>
+</head>
+
+<body>
+
+<img src="logo.webp" class="logo">
+
+<div class="skin-left"><img src="skin1.png"></div>
+<div class="skin-right"><img src="skin2.png"></div>
+
+<div id="profile" onclick="openLogin()">👤 Login</div>
+
+<div id="loginBox" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:black;padding:20px;">
+<input id="ign" placeholder="Enter IGN">
+<button onclick="login()">Login</button>
+</div>
+
+<div id="main" class="section active">
+  <div class="card" onclick="show('survival')">Survival</div>
+  <div class="card" onclick="show('about')">About</div>
+</div>
+
+<div id="survival" class="section">
+<button onclick="show('main')">⬅ Back</button>
+
+<div class="card" onclick="show('ranks')">Ranks</div>
+<div class="card" onclick="show('coinshop')">Coin Shop</div>
+<div class="card" onclick="show('tags')">Tags</div>
+</div>
+
+<div id="tags" class="section">
+<button onclick="show('survival')">⬅ Back</button>
+
+<div class="ranks-container">
+<div class="rank-box"><img class="rank-img" src="meow.png"><h3>🐱 Meow Tag</h3><p>300 Coins</p></div>
+<div class="rank-box"><img class="rank-img" src="toy.png"><h3>🧸 Toy Tag</h3><p>300 Coins</p></div>
+<div class="rank-box"><img class="rank-img" src="deadly.png"><h3>☠ Deadly Tag</h3><p>500 Coins</p></div>
+</div>
+
+<p style="margin-top:20px;opacity:0.8;">Tags can be bought from in-game store</p>
+</div>
+
+<div id="ranks" class="section">
+<button onclick="show('survival')">⬅ Back</button>
+
+<div class="ranks-container">
+
+<div class="rank-box prime">
+<img class="rank-img" src="prime.png">
+<h3>PRIME - ₹119</h3>
+<div class="perks">✔ /sit<br> ✔ /ec<br> ✔ /pv 1<br> ✔ /home 3</div>
+<img class="kit-img" src="prime-kit.png">
+<button onclick="addToCart('Prime Rank',119,'7353461')">Add to Cart</button>
+</div>
+
+<div class="rank-box leorix">
+<img class="rank-img" src="leorixplus.png">
+<h3>LEORIX+ - ₹499</h3>
+<div class="perks">✔ /pv 1<br> ✔ /ec<br> ✔ /craft<br> ✔ /home 7</div>
+<img class="kit-img" src="leorixplus-kit.png">
+<button onclick="addToCart('Leorix+ Rank',499,'7353463')">Add to Cart</button>
+</div>
+
+<div class="rank-box mythic">
+<img class="rank-img" src="mythic.png">
+<h3>MYTHIC - ₹999</h3>
+<div class="perks">✔ /sit<br> ✔ /ec<br> ✔ /pv 1<br> ✔ /home 5</div>
+<img class="kit-img" src="mythic-kit.png">
+<button onclick="addToCart('Mythic Rank',999,'7353462')">Add to Cart</button>
+</div>
+
+</div>
+</div>
+
+<!-- COINS SAME -->
+<!-- (NO CHANGE BELOW) -->
+
+<div id="coinshop" class="section">
+<button onclick="show('survival')">⬅ Back</button>
+
+<div class="coin-container">
+
+<div class="coin">
+<img src="400coins.png">
+<h3>400 Coins</h3>
+<p>₹99</p>
+<button onclick="addToCart('400 Coins',99,'7353461')">Add to Cart</button>
+</div>
+
+<div class="coin">
+<img src="850coins.png">
+<h3>850 Coins</h3>
+<p>₹199</p>
+<button onclick="addToCart('850 Coins',199,'7353462')">Add to Cart</button>
+</div>
+
+<div class="coin">
+<img src="1300coins.png">
+<h3>1300 Coins</h3>
+<p>₹299</p>
+<button onclick="addToCart('1300 Coins',299,'7353463')">Add to Cart</button>
+</div>
+
+<div class="coin">
+<img src="1800coins.png">
+<h3>1800 Coins</h3>
+<p>₹399</p>
+<button onclick="addToCart('1800 Coins',399,'7353461')">Add to Cart</button>
+</div>
+
+<div class="coin">
+<img src="2500coins.png">
+<h3>2500 Coins</h3>
+<p>₹499</p>
+<button onclick="addToCart('2500 Coins',499,'7353462')">Add to Cart</button>
+</div>
+
+<div class="coin">
+<img src="6000coins.png">
+<h3>6000 Coins</h3>
+<p>₹1000</p>
+<button onclick="addToCart('6000 Coins',1000,'7353463')">Add to Cart</button>
+</div>
+
+</div>
+</div>
+
+<div id="about" class="section">
+<button onclick="show('main')">⬅ Back</button>
+<h2>Leorix MC Server</h2>
+<p>IP: play.leorixmc.fun</p>
+<p id="status">Checking...</p>
+</div>
+
+<div id="cartBox"></div>
+
+<script>
+let user=null;
+let cart=[];
+
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+function openLogin(){
+document.getElementById("loginBox").style.display="block";
+}
+function login(){
+user=document.getElementById("ign").value;
+document.getElementById("profile").innerText="👤 "+user;
+document.getElementById("loginBox").style.display="none";
+}
+
+function addToCart(name,price,id){
+cart.push({name,price,id});
+renderCart();
+}
+
+function removeItem(i){
+cart.splice(i,1);
+renderCart();
+}
+
+function renderCart(){
+let box=document.getElementById("cartBox");
+
+if(cart.length===0){
+box.style.display="none";
+return;
+}
+
+box.style.display="block";
+
+let html="<h3>🛒 Cart</h3>";
+let total=0;
+
+cart.forEach((item,i)=>{
+total+=item.price;
+html+=`
+<div>
+${item.name} - ₹${item.price}
+<button onclick="removeItem(${i})" style="background:red;color:white;margin-left:10px;">Remove</button>
+</div>
+`;
+});
+
+html+=`<hr>Total: ₹${total}<br>`;
+html+=`<button onclick="checkoutCart()">Checkout</button>`;
+
+box.innerHTML=html;
+}
+
+function checkoutCart(){
+if(cart.length>0){
+Tebex.checkout.open({ ident: cart[0].id });
+}
+}
+
+async function loadStatus(){
+try{
+const res=await fetch("https://api.mcsrvstat.us/2/play.leorixmc.fun");
+const data=await res.json();
+
+document.getElementById("status").innerText=
+data.online ? "🟢 Online ("+data.players.online+"/"+data.players.max+")"
+            : "🔴 Offline";
+}catch{
+document.getElementById("status").innerText="Error loading status";
+}
+}
+loadStatus();
+</script>
+
+</body>
+</html>
