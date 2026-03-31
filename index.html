@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -198,9 +197,6 @@ button{
 </div>
 </div>
 
-<!-- COINS SAME -->
-<!-- (NO CHANGE BELOW) -->
-
 <div id="coinshop" class="section">
 <button onclick="show('survival')">⬅ Back</button>
 
@@ -317,9 +313,13 @@ html+=`<button onclick="checkoutCart()">Checkout</button>`;
 box.innerHTML=html;
 }
 
+/* ✅ ONLY CHANGE ADDED HERE */
 function checkoutCart(){
 if(cart.length>0){
-Tebex.checkout.open({ ident: cart[0].id });
+Tebex.checkout.open({
+  ident: cart[0].id,
+  origin: window.location.origin
+});
 }
 }
 
